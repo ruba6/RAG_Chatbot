@@ -76,20 +76,26 @@ def chat():
 
         Question: {message}
         """
-
+        print("Starting LLM call...")
         # LLM call
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
         )
-
+        
+        print("LLM response received")
         answer = response.choices[0].message.content
 
         return jsonify({"response": answer})
 
     except Exception as e:
-        print("CHAT ERROR:", str(e))
-        return jsonify({"response": "Error generating response"}), 500
+        # print("CHAT ERROR:", str(e))
+        # return jsonify({"response": "Error generating response"}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "response": f"CHAT ERROR: {str(e)}"
+        }), 500
 
 @app.route("/upload", methods=["POST"])
 def upload_pdf():
