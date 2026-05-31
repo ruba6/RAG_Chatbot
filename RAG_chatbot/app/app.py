@@ -18,7 +18,7 @@ DATA_PATH = "data"
 
 # Embeddings + Vector DB
 embeddings_model = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/paraphrase-MiniLM-L3-v2"
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
 vector_store = Chroma(
