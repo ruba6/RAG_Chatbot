@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RAG Chatbot</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .msg {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .user {
+            background: #007bff;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot {
+            background: #e9ecef;
+        }
+
+        .input-box {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+        }
+
+        button {
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox"></div>
+
+        <div class="input-box">
+           <input id="msg" placeholder="Type your message..." />
+           <button onclick="send()">Send</button>
+        </div>
+        <div style="padding:10px; border-top:1px solid #ccc;">
+            <input type="file" id="fileInput">
+            <button onclick="upload()">Upload PDF</button>
+        </div>
+    </div>
+
+    <script>
+        async function send() {
+            let msgInput = document.getElementById("msg");
+            let msg = msgInput.value.trim();
+            if (!msg) return;
+            let chatBox = document.getElementById("chatBox");
+
+            // Show user message
+            let userDiv = document.createElement("div");
+            userDiv.className = "msg user";
+            userDiv.innerText = msg;
+            chatBox.appendChild(userDiv);
+            msgInput.value = "";
+            try {
+                let res = await fetch("/chat", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({message: msg})
+                });
+
+                if (!res.ok) throw new Error("Server error");
+                    let data = await res.json();
+
+                // Show bot message
+                let botDiv = document.createElement("div");
+                botDiv.className = "msg bot";
+                botDiv.innerText = data.response;
+                chatBox.appendChild(botDiv);
+
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+            } catch (err) {
+                console.error(err);
+                alert("Error: Backend not responding");
+            }
+        }
+        async function upload() {
+            let fileInput = document.getElementById("fileInput");
+            if (!fileInput.files.length) {
+               alert("Please select a file first");
+               return;
+            }
+            let file = fileInput.files[0];
+            let formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                let res = await fetch("/upload", {
+                    method: "POST",
+                    body: formData
+            });
+
+            if (!res.ok) throw new Error("Upload failed");
+                let data = await res.json();
+                alert(data.message);
+
+            } catch (err) {
+                console.error(err);
+                alert("Upload failed");
+            }
+        }
+        document.getElementById("msg").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                send();
+            }
+        });
+    
+    </script>
+</body>
+</html>
