@@ -53,7 +53,7 @@ def chat():
         if not docs:
             # return jsonify({"response": "No data found. Upload a PDF first."})
             response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
+                model="llama-3.1-8b-instant",
                 messages=[
                     {
                         "role": "user",
@@ -79,7 +79,7 @@ def chat():
 
         # LLM call
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
         )
 
