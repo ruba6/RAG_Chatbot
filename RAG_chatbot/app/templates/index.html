@@ -90,7 +90,7 @@
             if (!msg) return;
             let chatBox = document.getElementById("chatBox");
 
-            // Show user message
+            // USER MESSAGE
             let userDiv = document.createElement("div");
             userDiv.className = "msg user";
             userDiv.innerText = msg;
@@ -99,26 +99,43 @@
             try {
                 let res = await fetch("/chat", {
                     method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({message: msg})
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: msg
+                    })
                 });
 
-                if (!res.ok) throw new Error("Server error");
-                    let data = await res.json();
+                // READ RAW RESPONSE
+                let raw = await res.text();
 
-                // Show bot message
+                console.log("RAW RESPONSE:", raw);
+
+                if (!res.ok) {
+                    throw new Error(raw);
+                }
+
+                let data = JSON.parse(raw);
+
                 let botDiv = document.createElement("div");
                 botDiv.className = "msg bot";
                 botDiv.innerText = data.response;
+
                 chatBox.appendChild(botDiv);
 
                 chatBox.scrollTop = chatBox.scrollHeight;
 
             } catch (err) {
-                console.error(err);
-                alert("Error: Backend not responding");
+
+                console.error("FULL ERROR:", err);
+                let errorDiv = document.createElement("div");
+                errorDiv.className = "msg bot";
+                errorDiv.innerText = "ERROR: " + err.message;
+                chatBox.appendChild(errorDiv);
             }
         }
+        
         async function upload() {
             let fileInput = document.getElementById("fileInput");
             if (!fileInput.files.length) {
