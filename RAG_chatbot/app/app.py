@@ -51,7 +51,20 @@ def chat():
         print("Docs:", len(docs))
 
         if not docs:
-            return jsonify({"response": "No data found. Upload a PDF first."})
+            # return jsonify({"response": "No data found. Upload a PDF first."})
+            response = client.chat.completions.create(
+                model="llama3-8b-8192",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": message
+                    }
+                ],
+            )
+
+            answer = response.choices[0].message.content
+
+            return jsonify({"response": answer})
 
         # Limit size (VERY IMPORTANT)
         knowledge = "\n\n".join([doc.page_content[:300] for doc in docs[:2]])
