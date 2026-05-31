@@ -92,7 +92,7 @@ def upload_pdf():
     
     file.save(file_path)
 
-    # 🔥 Run ingestion ONLY for this file
+    #Run ingestion ONLY for this file
     from database_ingest import ingest_single_file
     ingest_single_file(file_path)
 
