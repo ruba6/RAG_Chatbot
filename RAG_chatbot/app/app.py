@@ -18,7 +18,7 @@ DATA_PATH = "data"
 
 # Embeddings + Vector DB
 embeddings_model = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
+    model_name="sentence-transformers/all-MiniLM-L3-v2"
 )
 
 vector_store = Chroma(
@@ -66,7 +66,7 @@ def chat():
 
         # LLM call
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama3-8b-8192",
             messages=[{"role": "user", "content": prompt}],
         )
 
