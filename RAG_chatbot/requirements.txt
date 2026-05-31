@@ -1,0 +1,18 @@
+flask
+gunicorn
+
+# LLM
+groq
+
+# Langchain stack
+langchain
+langchain-community
+langchain-chroma
+langchain-huggingface
+
+chromadb
+pypdf
+sentence-transformers
+
+python-dotenv
+
