@@ -18,7 +18,7 @@ DATA_PATH = "data"
 
 # Embeddings + Vector DB
 embeddings_model = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L3-v2"
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
 vector_store = Chroma(
@@ -53,7 +53,7 @@ def chat():
         if not docs:
             # return jsonify({"response": "No data found. Upload a PDF first."})
             response = client.chat.completions.create(
-                model="llama3-8b-8192",
+                model="llama-3.3-70b-versatile",
                 messages=[
                     {
                         "role": "user",
